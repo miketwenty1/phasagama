@@ -174,7 +174,7 @@ gameScene.create = function() {
     });
   }
   this.wordText = this.add.text(30,20, '', {
-    font: '28px Open Sans',
+    font: '28px',
     fill: '#ffffff'
   });
   // show first question
