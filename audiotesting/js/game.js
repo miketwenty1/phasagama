@@ -1,3 +1,4 @@
+// tween.onComplete.add(function() {}) NEED TO LOOK INTO THIS
 // create a new scene named "Game"
 let gameScene = new Phaser.Scene('Game');
 
@@ -90,25 +91,25 @@ gameScene.create = function() {
   let bg = this.add.sprite(0,0, 'background').setOrigin(0,0);
 
   let items = this.items.getChildren();
-  console.log(items.length);
+  // console.log(items.length);
   // Phaser.Actions.Call(this.items.getChildren(), function(item){
   for (let i = 0; i < items.length; i++) {
     let item = items[i];
     this.words[i].sound = this.sound.add(item.texture.key + 'Audio');
-    console.log(item.texture.key);
+    // console.log(item.texture.key);
     item.setInteractive();
     item.setAlpha(.75);
     // item.setScale(.8); // showing different ways to set scale for the group
     // tweening resize
-    item.resizeTween = this.tweens.add({
-      targets: item,
-      scaleX: 1.5,
-      scaleY: 1.5,
-      duration: 200,
-      paused: true,
-      yoyo: true,
-      ease: 'Circ.easeOut'
-    });
+    // item.resizeTween = this.tweens.add({
+    //   targets: item,
+    //   scaleX: 1.5,
+    //   scaleY: 1.5,
+    //   duration: 200,
+    //   paused: true,
+    //   yoyo: true,
+    //   ease: 'Circ.easeOut'
+    // });
     item.alphaTween = this.tweens.add({
       targets: item,
       alpha: 1,
@@ -128,8 +129,8 @@ gameScene.create = function() {
     });
     item.wrongTween = this.tweens.add({
       targets: item,
-      scaleX: 1.5,
-      scaleY: 1.5,
+      scaleX: .75,
+      scaleY: .75,
       duration: 200,
       angle: 90,
       paused: true,
@@ -138,26 +139,37 @@ gameScene.create = function() {
     });
 
     item.on('pointerdown', function(pointer){
+      console.log(item);
       // console.log('you clicked ' + item.texture.key);
       // item.resizeTween.restart();
       let result = this.processAnswer(this.words[i].spanish);
       if (result) {
         item.correctTween.restart();
+        // needs better logic for onComplete of the tween 
+        // item.wrongTween.stop();
       } else {
         item.wrongTween.restart();
+        // needs better logic for onComplete of the tween 
+        // item.correctTween.stop();
       }
       this.showNextQuestion();
     }, this);
     item.on('pointerover', function(pointer){
-      console.log('you hovered over' + item.texture.key);
+      // console.log('you hovered over' + item.texture.key);
       item.alphaTween.restart();
-
+      // item.correctTween.stop();
+      // item.wrongTween.stop();
     });
     item.on('pointerout', function(pointer){
-      console.log('you hovered off of' + item.texture.key);
+      // console.log('you hovered off of' + item.texture.key);
       // stop tween or the hoveroff action won't work
-      item.alphaTween.stop();
+      // item.alphaTween.stop();
+      // item.correctTween.stop();
+      // item.wrongTween.stop();
+
+
       item.alpha = .75;
+      item.angle = 0;
       item.setScale(.8);
 
     });
