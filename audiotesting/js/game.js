@@ -173,8 +173,8 @@ gameScene.create = function() {
 
     });
   }
-  this.wordText = this.add.text(30,20, '', {
-    font: '28px',
+  this.wordText = this.add.text(30,20, ' ', {
+    fontSize: '40px',
     fill: '#ffffff'
   });
   // show first question
