@@ -139,7 +139,6 @@ gameScene.create = function() {
     });
 
     item.on('pointerdown', function(pointer){
-      console.log(item);
       // console.log('you clicked ' + item.texture.key);
       // item.resizeTween.restart();
       let result = this.processAnswer(this.words[i].spanish);
@@ -150,7 +149,7 @@ gameScene.create = function() {
       } else {
         item.wrongTween.restart();
         // needs better logic for onComplete of the tween 
-        // item.correctTween.stop();
+        item.correctTween.stop();
       }
       this.showNextQuestion();
     }, this);
