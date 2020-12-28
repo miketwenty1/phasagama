@@ -106,10 +106,11 @@ gameScene.create = function() {
     //   scaleX: 1.5,
     //   scaleY: 1.5,
     //   duration: 200,
-    //   paused: true,
+    // paused: true,
     //   yoyo: true,
     //   ease: 'Circ.easeOut'
     // });
+
     item.alphaTween = this.tweens.add({
       targets: item,
       alpha: 1,
@@ -133,29 +134,31 @@ gameScene.create = function() {
       scaleY: .75,
       duration: 200,
       angle: 90,
-      paused: true,
+        paused: true,
       yoyo: true,
       ease: 'Circ.easeOut'
     });
+
 
     item.on('pointerdown', function(pointer){
       // console.log('you clicked ' + item.texture.key);
       // item.resizeTween.restart();
       let result = this.processAnswer(this.words[i].spanish);
       if (result) {
-        item.correctTween.restart();
+        item.correctTween.resume();
         // needs better logic for onComplete of the tween 
         // item.wrongTween.stop();
       } else {
-        item.wrongTween.restart();
+        item.wrongTween.resume();
+        console.log("wrong");
         // needs better logic for onComplete of the tween 
         item.correctTween.stop();
       }
       this.showNextQuestion();
     }, this);
     item.on('pointerover', function(pointer){
-      // console.log('you hovered over' + item.texture.key);
-      item.alphaTween.restart();
+      console.log('you hovered over' + item.texture.key);
+      item.alphaTween.resume();
       // item.correctTween.stop();
       // item.wrongTween.stop();
     });
