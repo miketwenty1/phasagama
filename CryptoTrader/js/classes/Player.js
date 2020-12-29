@@ -32,24 +32,61 @@ class Player extends Phaser.Physics.Arcade.Image {
     } else {
     }
 
-
+    
     // pointer for mobile
+    // DOWN
     if (pointer.isDown && pointer.y < pointer.downY) {
-      this.body.setVelocityY(-this.velocity)
+      let intensity = 0;
+      if (pointer.downY-pointer.y > 50)
+      {
+        intensity = 1;
+        this.body.setVelocityY(-this.velocity*intensity)
+      } else {
+        intensity = (((pointer.downY-pointer.y)*2)/100);
+        this.body.setVelocityY(-this.velocity*intensity)
+      }
+    // UP
     }
     else if (pointer.isDown && pointer.y > pointer.downY) {
-      this.body.setVelocityY(this.velocity);
-
+      // console.log('up');
+      let intensity = 0;
+      if (pointer.y-pointer.downY > 50 )
+      {
+        // console.log('super up');
+        intensity = 1;
+        this.body.setVelocityY(this.velocity*intensity);
+      } else {
+        intensity = (((pointer.y-pointer.downY)*2)/100);
+        this.body.setVelocityY(this.velocity*intensity);
+      }
+      
     } else {
     }
-    
+    // LEFT
     if (pointer.isDown && pointer.x < pointer.downX) {
-      this.body.setVelocityX(-this.velocity);
-
+      let intensity = 0;
+      // console.log('left');
+      if (pointer.downX-pointer.x > 50 )
+      {
+        intensity = 1;
+        this.body.setVelocityX(-this.velocity*intensity);
+      } else {
+        intensity = (((pointer.downX-pointer.x)*2)/100);
+        this.body.setVelocityX(-this.velocity*intensity);
+      }
+    // RIGHT
     }
     else if (pointer.isDown && pointer.x > pointer.downX) {
-      this.body.setVelocityX(this.velocity);
-
+      let intensity = 0;
+      if (pointer.x-pointer.downX > 50 )
+      {
+        intensity = 1;
+        this.body.setVelocityX(this.velocity*intensity);
+      } else {
+        intensity = (((pointer.x-pointer.downX)*2)/100);
+        this.body.setVelocityX(this.velocity*intensity);
+      }
+      
     } else {
     }
   
