@@ -10,4 +10,4 @@
   - handle input
 - Chest:
   - create chest
-  - how much gold
+  - how much bitcoin you ~~have~~
