@@ -47,12 +47,12 @@
   
   <script>
       function toggleFullscreen() {
-        let elem = document.getElementById("mybod");
-  
+        let elem = document.querySelector('canvas')
+        console.log('toggle for:'+elem);
         if (!document.fullscreenElement) {
           elem.requestFullscreen().catch(err => {
             console.log('failed to go fullscreen');
-            // alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+            alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
           });
         } else {
           document.exitFullscreen();
@@ -60,7 +60,7 @@
       }
       
       document.addEventListener('DOMContentLoaded', (event) => {
-        toggleFullscreen();
+        // toggleFullscreen();   doesn't seem to be easy to go full screen on mobile
         if (window.innerWidth > window.innerHeight) {
         console.log('landscape');
         x = document.getElementById("warningOrientation");
