@@ -10,18 +10,18 @@
         display: block;
         margin:auto; 
       }
-      #warning-message { display: none; }
-      @media only screen and (orientation:portrait){
-        #phaser-game { display:none; }
-        #warning-message { display:block; }
-      }
-      @media only screen and (orientation:landscape){
-        #warning-message { display:none; }
-    }
     </style>
 </head>
 <body>
-  <link rel="manifest" href="manifest.json">
+  <script>
+    screen.lockOrientationUniversal = screen.lockOrientation || screen.mozLockOrientation || screen.msLockOrientation;
+
+    if (screen.lockOrientationUniversal("landscape-primary")) {
+      // Orientation was locked
+    } else {
+      // Orientation lock failed
+    }  
+  </script>
   <div id="phaser-game"></div>
   <script src="js/lib/phaser.min-3.50.0.js" ></script>
   <script src="js/classes/UiButton.js" ></script>
