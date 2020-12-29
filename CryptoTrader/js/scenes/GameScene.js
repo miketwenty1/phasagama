@@ -71,7 +71,7 @@ class GameScene extends Phaser.Scene {
       this.depositCount = 0;
       let wojakImage = this.add.image(200,200, 'wojak').setOrigin(0,0);
       this.wojakSad.play();
-      setTimeout(() => { wojakImage.destroy(); this.scene.restart(); }, 1000);
+      setTimeout(() => { wojakImage.destroy(); this.scene.restart(); this.scene.start('Title');}, 1000);
       
     }
   }
