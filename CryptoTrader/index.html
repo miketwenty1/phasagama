@@ -17,25 +17,22 @@
         left: 0;
         right: 0; */
       }
-      html, body, div, object, h1, h2 {
+      html, body, div, object, h1 {
         margin: 0;
         padding: 0;
         border: 0;
         outline: 0;
       }
+      h2 {
+        text-align:center;  
+        /* line-height: 0px; */
+      }
     </style>
 </head>
-<body>
+<body id='mybod'>
   <h2 id='warningOrientation'></h2>
-  <script>
-    if (window.innerWidth > window.innerHeight) {
-      console.log('landscape');
-    } else {
-      document.getElementById("warningOrientation").innerHTML = 'try rotating screen to landscape for a better expierence';
-      console.log('portrait');
+  
 
-    }  
-  </script>
 
   <div id="phaser-game"></div>
   <script src="js/lib/phaser.min-3.50.0.js" ></script>
@@ -48,6 +45,53 @@
   <script src="js/scenes/UiScene.js" ></script>
   <script src="js/main.js" ></script>
   
+  <script>
+      function toggleFullscreen() {
+        let elem = document.getElementById("mybod");
+  
+        if (!document.fullscreenElement) {
+          elem.requestFullscreen().catch(err => {
+            console.log('failed to go fullscreen');
+            // alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+          });
+        } else {
+          document.exitFullscreen();
+        }
+      }
+      
+      document.addEventListener('DOMContentLoaded', (event) => {
+        toggleFullscreen();
+        if (window.innerWidth > window.innerHeight) {
+        console.log('landscape');
+        x = document.getElementById("warningOrientation");
+        x.style.display = "none";
+        } else {
+          let canvy = document.querySelector('canvas')
+          console.log('screener:'+canvy);
+          canvy.style.height = "50vh";
+          document.getElementById("warningOrientation").innerHTML = 'try rotating screen to landscape<br> for a better expierence';
+          console.log('portrait');
+  
+        }  
+      })
+
+      window.addEventListener("resize", function(event) {  
+        if (window.innerWidth > window.innerHeight) {
+          console.log('landscape');
+          x = document.getElementById("warningOrientation");
+          x.style.display = "none";
+          let canvy = document.querySelector('canvas')
+          canvy.style.height = "100vh";
+
+        } else {
+          x = document.getElementById("warningOrientation");
+          x.style.display = "block";
+          let canvy = document.querySelector('canvas')
+          console.log('screener:'+canvy);
+          canvy.style.height = "50vh";
+        }  
+      });
+    </script>
   <!-- <script src="js/test.js" ></script> -->
 </body>
 </html>
