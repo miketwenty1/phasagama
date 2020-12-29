@@ -22,6 +22,7 @@ class GameScene extends Phaser.Scene {
       'Should of stuck \nwith Theta strategy',
       'Damn, Margin Called',
     ]
+    this.ref = this.add.image(this.input.activePointer.downX,this.input.activePointer.downY,'pointref').setAlpha(0.4).setVisible(false);
   }
   create() {
     this.createAudio();
@@ -34,6 +35,13 @@ class GameScene extends Phaser.Scene {
   }
 
   update () {
+    this.ref.setX(this.input.activePointer.downX);
+    this.ref.setY(this.input.activePointer.downY);
+    this.ref.setVisible(true);
+
+    if (this.input.activePointer.isDown == false) {
+      this.ref.setVisible(false);
+    }
     if (this.score > 10) {
       this.hurryDepositText.setVisible(true);
     } else {

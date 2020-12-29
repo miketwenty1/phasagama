@@ -11,10 +11,10 @@ class Player extends Phaser.Physics.Arcade.Image {
     this.setCollideWorldBounds(true);
     this.body.setAllowGravity(false);
     this.scene.add.existing(this);
+
     
   }
   update (cursors, pointer, playerx, playery) {
-
     // cursor
     this.body.setVelocity(0);
     if (cursors.up.isDown) {
