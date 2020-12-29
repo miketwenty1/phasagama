@@ -34,20 +34,20 @@ class Player extends Phaser.Physics.Arcade.Image {
 
 
     // pointer for mobile
-    if (pointer.isDown && pointer.y < playery) {
+    if (pointer.isDown && pointer.y < pointer.downY) {
       this.body.setVelocityY(-this.velocity)
     }
-    else if (pointer.isDown && pointer.y > playery) {
+    else if (pointer.isDown && pointer.y > pointer.downY) {
       this.body.setVelocityY(this.velocity);
 
     } else {
     }
     
-    if (pointer.isDown && pointer.x < playerx) {
+    if (pointer.isDown && pointer.x < pointer.downX) {
       this.body.setVelocityX(-this.velocity);
 
     }
-    else if (pointer.isDown && pointer.x > playerx) {
+    else if (pointer.isDown && pointer.x > pointer.downX) {
       this.body.setVelocityX(this.velocity);
 
     } else {
