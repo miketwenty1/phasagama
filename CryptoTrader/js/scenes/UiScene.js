@@ -10,11 +10,11 @@ class UiScene extends Phaser.Scene {
     this.setupEvents();
   }
   setupUiElements() {
-    this.scoreText = this.add.text(35, 8, 'Bitcoins: 0', {
-      fontSize: '16px',
+    this.scoreText = this.add.text(60, 18, 'Bitcoins: 0', {
+      fontSize: '20px',
       fill: '#ffffff'
     });
-    this.btcIcon = this.add.image(15,14,'btc').setScale(.4);
+    this.btcIcon = this.add.image(26,24,'btc').setScale(.8);
   }
   setupEvents() {
     // listen for updateScore event from game scene

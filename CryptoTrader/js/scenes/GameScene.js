@@ -12,6 +12,16 @@ class GameScene extends Phaser.Scene {
       'Staying',
       'Poor'
     ]
+    this.hurryDepositPhrase = 'Quick, I have some Bitcoins\nNow to go trade them at the Exchange!';
+    this.hurryDepositText = this.add.text(300,20, this.hurryDepositPhrase, { fontSize: '15px', fill: '#ff00ff' });
+
+    this.depositPhrase = 'I have Bitcoins,\nnow to trade them \nat the exchange';
+    this.phrases = [
+      'This YouTube \ninfluencer lied to me',
+      'I misread the charts',
+      'Should of stuck \nwith Theta strategy',
+      'Damn, Margin Called',
+    ]
   }
   create() {
     this.createAudio();
@@ -24,13 +34,24 @@ class GameScene extends Phaser.Scene {
   }
 
   update () {
+    if (this.score > 10) {
+      this.hurryDepositText.setVisible(true);
+    } else {
+      this.hurryDepositText.setVisible(false);
+    }
     this.player.update(this.cursors, this.input.activePointer, this.player.body.x, this.player.body.y);
-    if (this.player.body.touching.down && this.score > 0 && this.player.body.x >300 && this.player.body.y > 300)
+    if ((this.player.body.touching.down || this.player.body.touching.right) && this.score > 0 && this.player.body.x >300 && this.player.body.y > 300)
     {
       this.add.text(100+this.depositCount*20, 100+this.depositCount*100, this.words[this.depositCount], { fontSize: '30px', fill: '#fff' });
       console.log(this.words[this.depositCount]);
       this.depositCount += 1;
       console.log(this.depositCount);
+      let currentPhrase = this.add.text(300,200, this.phrases[this.depositCount], { fontSize: '25px', fill: '#ffff00' });
+
+      setTimeout(() => { 
+        currentPhrase.destroy();
+      }, 1500);
+
       console.log('thanks for deposit '+ this.depositCount);
       this.score = 0;
       this.events.emit('updateScore', this.score);
@@ -58,16 +79,16 @@ class GameScene extends Phaser.Scene {
     });
   }
   createPlayer() {
-    this.player = new Player(this, 32, 32, 'characters', 5);
+    this.player = new Player(this, 32, 402, 'characters', 5);
   }
   createChests() {
-    this.chessPositions = [
-      [500,40],
-      [200,50],
+    this.chestPositions = [
+      [100,40],
+      [160,50],
       [50,200],
       [100,100],
       [200,200],
-      [500,300],
+      [60,60],
       [200,100]
     ]
     this.chests = this.physics.add.group();
@@ -77,7 +98,7 @@ class GameScene extends Phaser.Scene {
     }
   }
   spawnChest() {
-    const location = this.chessPositions[Math.floor(Math.random() * this.chessPositions.length)]
+    const location = this.chestPositions[Math.floor(Math.random() * this.chestPositions.length)];
     // console.log(location);
     let chest = this.chests.getFirstDead();
     if (!chest) {
@@ -92,11 +113,11 @@ class GameScene extends Phaser.Scene {
 
   }
   createWalls() {
-    this.wall = this.physics.add.image(500, 500, 'button1');
+    this.wall = this.physics.add.image(500, 500, 'button1').setScale(1.2,2);
     this.wall.body.setAllowGravity(false);
     this.wall.setImmovable();
 
-    this.exchangeText = this.add.text(0, 0, 'Shitcoin Exchange', { fontSize: '15px', fill: '#fff' });
+    this.exchangeText = this.add.text(0, 0, 'Shitcoin \nExchange', { fontSize: '35px', fill: '#fff' });
     Phaser.Display.Align.In.Center(this.exchangeText, this.wall);
 
   }
