@@ -12,8 +12,8 @@ class GameScene extends Phaser.Scene {
       'Staying',
       'Poor'
     ]
-    this.hurryDepositPhrase = 'Quick, I have some Bitcoins\nNow to go trade them at the Exchange!';
-    this.hurryDepositText = this.add.text(300,20, this.hurryDepositPhrase, { fontSize: '15px', fill: '#ff00ff' });
+    this.hurryDepositPhrase = 'I have some Bitcoins\nI\'ll hurry to trade them \nAt the Exchange!';
+    this.hurryDepositText = this.add.text(300,20, this.hurryDepositPhrase, { fontSize: '20px', fill: '#ff00ff' });
 
     this.depositPhrase = 'I have Bitcoins,\nnow to trade them \nat the exchange';
     this.phrases = [
@@ -40,7 +40,7 @@ class GameScene extends Phaser.Scene {
       this.hurryDepositText.setVisible(false);
     }
     this.player.update(this.cursors, this.input.activePointer, this.player.body.x, this.player.body.y);
-    if ((this.player.body.touching.down || this.player.body.touching.right) && this.score > 0 && this.player.body.x >300 && this.player.body.y > 300)
+    if ((this.player.body.touching.down || this.player.body.touching.right) && this.score > 0 && this.player.body.x > 250 && this.player.body.y > 250)
     {
       this.add.text(100+this.depositCount*20, 100+this.depositCount*100, this.words[this.depositCount], { fontSize: '30px', fill: '#fff' });
       console.log(this.words[this.depositCount]);
@@ -113,7 +113,7 @@ class GameScene extends Phaser.Scene {
 
   }
   createWalls() {
-    this.wall = this.physics.add.image(500, 500, 'button1').setScale(1.2,2);
+    this.wall = this.physics.add.image(500, 400, 'button1').setScale(1.2,2);
     this.wall.body.setAllowGravity(false);
     this.wall.setImmovable();
 

@@ -10,6 +10,14 @@
         display: block;
         margin:auto; 
       }
+      #warning-message { display: none; }
+      @media only screen and (orientation:portrait){
+        #phaser-game { display:none; }
+        #warning-message { display:block; }
+      }
+      @media only screen and (orientation:landscape){
+        #warning-message { display:none; }
+    }
     </style>
 </head>
 <body>
