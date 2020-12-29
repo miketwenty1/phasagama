@@ -8,20 +8,35 @@
         height: 100vh; 
         width: 100vw; 
         display: block;
-        margin:auto; 
+        margin: 0px;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        /* top:0;
+        bottom: 0;
+        left: 0;
+        right: 0; */
+      }
+      html, body, div, object, h1, h2 {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
       }
     </style>
 </head>
 <body>
+  <h2 id='warningOrientation'></h2>
   <script>
-    screen.lockOrientationUniversal = screen.lockOrientation || screen.mozLockOrientation || screen.msLockOrientation;
-
-    if (screen.lockOrientationUniversal("landscape-primary")) {
-      // Orientation was locked
+    if (window.innerWidth > window.innerHeight) {
+      console.log('landscape');
     } else {
-      // Orientation lock failed
+      document.getElementById("warningOrientation").innerHTML = 'try rotating screen to landscape for a better expierence';
+      console.log('portrait');
+
     }  
   </script>
+
   <div id="phaser-game"></div>
   <script src="js/lib/phaser.min-3.50.0.js" ></script>
   <script src="js/classes/UiButton.js" ></script>
