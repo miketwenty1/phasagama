@@ -82,7 +82,7 @@ class GameScene extends Phaser.Scene {
     let chest = this.chests.getFirstDead();
     if (!chest) {
       console.log('create new chest');
-      const chest = new Chest (this, location[0],location[1], 'items',0);
+      const chest = new Chest (this, location[0],location[1], 'items',3);
       this.chests.add(chest);
     } else {
       console.log('reposition dead chest');
