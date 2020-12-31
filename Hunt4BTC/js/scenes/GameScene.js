@@ -4,7 +4,6 @@ class GameScene extends Phaser.Scene {
   }
   init() {
     this.scene.launch('Ui');
-    this.score = 0;
   }
   create() {
     this.createMap();
@@ -120,24 +119,24 @@ class GameScene extends Phaser.Scene {
     this.physics.add.overlap(this.player.weapon, this.monsters, this.enemyOverlap, null, this);
   }
 
-  enemyOverlap(player, enemy) {
+  enemyOverlap(weapon, enemy) {
     if (this.player.playerAttacking && !this.player.swordHit) {
       this.player.swordHit = true;
       // enemy.makeInactive();
-      this.events.emit('monsterAtttacked', enemy.id);
+      this.events.emit('monsterAtttacked', enemy.id, this.player.id);
     }
 
   }
 
   collectChest(player,chest) {
     // console.log('collected chest');
-    chest.makeInactive();
-    this.score += chest.coins
-    this.events.emit('updateScore', this.score);
+    // chest.makeInactive();  this now done by chest event listener on chestRemoved
+    // this.score += chest.coins commenting this out because now it exist in the player model 
+    // this.events.emit('updateBalance', this.score);  this also taken out and put game manager
     if (this.goldPickup.isPlaying == false) {
       this.goldPickup.play();
     }
-    this.events.emit('pickUpChest', chest.id);
+    this.events.emit('pickUpChest', chest.id, this.player.id);
   }
   createMap() {
     // create map
@@ -163,12 +162,24 @@ class GameScene extends Phaser.Scene {
         }
       });
     });
+    this.events.on('chestRemoved', (chestId) => {
+      this.chests.getChildren().forEach((chest) => {
+        if (chest.id == chestId) {
+          chest.makeInactive();
+        }
+      });
+    });
     this.events.on('updateMonsterHealth', (monsterId, health) => {
       this.monsters.getChildren().forEach((monster) => {
         if (monster.id == monsterId) {
           monster.updatetHealth(health);
         }
       });
+    });
+    this.events.on('updatePlayerHealth', (playerId, health) => {
+      console.log('whats going on here');
+      console.log(Object.keys(this.player));
+      this.player.updateHealth(health);
     });
 
     this.gameManager = new GameManager(this, this.map.map.objects);

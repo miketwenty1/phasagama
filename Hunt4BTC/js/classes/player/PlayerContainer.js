@@ -4,12 +4,7 @@ const Direction = {
   UP: 'UP',
   DOWN: 'DOWN'
 };
-const Mode = {
-  EASY: 10,
-  MEDIUM: 5,
-  HARD: 3,
-  INSANE: 1
-}
+
 
 class PlayerContainer extends Phaser.GameObjects.Container {
   constructor (scene, x, y, key, frame, health, maxHealth, id) {
@@ -43,8 +38,26 @@ class PlayerContainer extends Phaser.GameObjects.Container {
     this.scene.physics.world.enable(this.weapon);
     this.add(this.weapon);
     this.weapon.alpha = 0;
+    this.createHealthBar();
 
   }
+  createHealthBar() {
+    this.healthBar = this.scene.add.graphics();
+    this.updateHealthBar();
+  }
+  updateHealthBar() {
+    this.healthBar.clear();
+    this.healthBar.fillStyle(0xffffff, .3);
+    this.healthBar.fillRect(this.x-32, this.y-40, 32*Scale.FACTOR, 5);
+    this.healthBar.fillGradientStyle(0xff0000, 0xff00ff, 4);
+    // console.log(`health: ${this.health} max health: ${this.maxHealth}`);
+    this.healthBar.fillRect(this.x-32, this.y-40, 32*Scale.FACTOR * (this.health/this.maxHealth), 5);
+  }
+  updateHealth(health) {
+    this.health = health;
+    this.updateHealthBar();
+  }
+  
   update (cursors) {
 
     // cursor
@@ -105,6 +118,6 @@ class PlayerContainer extends Phaser.GameObjects.Container {
         this.weapon.flipX = true;
       }
     }
-  
+    this.updateHealthBar();
   }
 }

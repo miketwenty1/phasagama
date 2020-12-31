@@ -10,4 +10,12 @@ class PlayerModel {
     //short hand to set 2 values 1st and 2nd item of location array
     [this.x, this.y] = location;
   }
+
+  updateBitcoin(bitcoin) {
+    this.bitcoin += bitcoin;
+  }
+  updateHealth(damage) {
+    this.health -= damage;
+    console.log('damage was '+damage+ ', now health is '+this.health);
+  }
 }

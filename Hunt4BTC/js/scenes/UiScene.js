@@ -18,7 +18,7 @@ class UiScene extends Phaser.Scene {
   }
   setupEvents() {
     // listen for updateScore event from game scene
-    this.gameScene.events.on('updateScore', (score) => {
+    this.gameScene.events.on('updateBalance', (score) => {
       this.scoreText.setText(`Bitcoins: ${score}`);
     });
   }

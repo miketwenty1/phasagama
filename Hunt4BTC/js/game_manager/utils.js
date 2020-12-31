@@ -10,3 +10,11 @@ function randomNumber(min, max) {
 const Scale = {
   FACTOR: 2
 };
+
+const Mode = {
+  EASY: 10,
+  MEDIUM: 5,
+  HARD: 3,
+  INSANE: 1
+}
+const DIFFICULTY = 'MEDIUM';

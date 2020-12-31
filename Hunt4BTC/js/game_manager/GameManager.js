@@ -51,26 +51,44 @@ class GameManager {
   }
 
   setupEventListener() {
-    this.scene.events.on('pickUpChest', (chestId) => {
+    this.scene.events.on('pickUpChest', (chestId, playerId) => {
       // update spawner
       if (this.chests[chestId]) {
-        // console.log(chestId);
-        // console.log(this.spawner);
+        // short hand for setting bitcoin variable from chests[chestId].bitcoin this is probably a bad idea.. just trying to learn javascript and see if this works.
+        const { bitcoin } = this.chests[chestId];
+
+        // updating player balance
+        this.players[playerId].updateBitcoin(bitcoin);
+        this.scene.events.emit('updateBalance', this.players[playerId].bitcoin);
+
+        // remove chest
         this.spawners[this.chests[chestId].spawnerId].removeObject(chestId);
+        this.scene.events.emit('chestRemoved', chestId);
       }
 
     });
-    this.scene.events.on('monsterAtttacked', (monsterId) => {
+    this.scene.events.on('monsterAtttacked', (monsterId, playerId) => {
       // update spawner
+      // console.log('debug: '+ Object.keys(this.players[playerId]));
+      console.log('playerid: '+playerId);
       if (this.monsters[monsterId]) {
-        this.monsters[monsterId].loseHealth(2*Mode.EASY);
+        const { bitcoin, attack } = this.monsters[monsterId];
+        this.monsters[monsterId].loseHealth(2*Mode[DIFFICULTY]);
         // console.log('health' + this.monsters[monsterId].health);
         // check health remove monster if dead
+        
         if (this.monsters[monsterId].health <= 0) {
+
+          this.players[playerId].updateBitcoin(bitcoin);
+          this.scene.events.emit('updateBalance', this.players[playerId].bitcoin);
           // console.log('health2' + this.monsters[monsterId].health);
           this.spawners[this.monsters[monsterId].spawnerId].removeObject(monsterId);
           this.scene.events.emit('monsterRemoved', monsterId);
         } else {
+          this.players[playerId].updateHealth(attack);
+          //update player health
+          this.scene.events.emit('updatePlayerHealth', playerId, this.players[playerId].health);
+          //update monster health
           this.scene.events.emit('updateMonsterHealth', monsterId, this.monsters[monsterId].health);
         }
       }
