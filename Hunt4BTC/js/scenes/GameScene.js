@@ -7,17 +7,18 @@ class GameScene extends Phaser.Scene {
     this.score = 0;
   }
   create() {
+    this.createMap();
     this.createAudio();
     this.createInput();
-    this.createPlayer();
-    this.createChests();
-    this.createWalls();
-    this.addCollisions();
-  
+    this.createGroups();
+    this.createGameManager();
+    
   }
 
   update () {
-    this.player.update(this.cursors);
+    if (this.player) {
+      this.player.update(this.cursors);
+    }
   }
 
   createAudio() {
@@ -26,52 +27,97 @@ class GameScene extends Phaser.Scene {
       volume: .6 // value between 0 and 1
     });
   }
-  createPlayer() {
-    this.player = new Player(this, 32, 32, 'characters', 5);
+  createPlayer(location) {
+    this.player = new PlayerContainer(this, location[0]*Scale.FACTOR, location[1]*Scale.FACTOR, 'characters', 5);
   }
-  createChests() {
-    this.chessPositions = [
-      [500,40],
-      [200,50],
-      [50,200],
-      [100,100],
-      [200,200],
-      [500,300],
-      [200,100]
-    ]
+  createGroups() {
+
     this.chests = this.physics.add.group();
-    this.maxNumberOfChest = 3;
-    for (let i = 0; i < this.maxNumberOfChest; i++) {
-      this.spawnChest();
-    }
+    this.monsters = this.physics.add.group();
+
   }
-  spawnChest() {
-    const location = this.chessPositions[Math.floor(Math.random() * this.chessPositions.length)]
+  spawnChest(chestObject) {
+
     // console.log(location);
     let chest = this.chests.getFirstDead();
     if (!chest) {
-      console.log('create new chest');
-      const chest = new Chest (this, location[0],location[1], 'items',0);
+      // console.log('create new chest');
+      chest = new Chest (
+        this, 
+        chestObject.x * Scale.FACTOR, 
+        chestObject.y * Scale.FACTOR, 
+        'items',
+        0,
+        chestObject.bitcoin,
+        chestObject.id);
       this.chests.add(chest);
     } else {
-      console.log('reposition dead chest');
-      chest.setPosition(location[0], location[1]);
+      // console.log('reposition dead chest');
+      chest.coin = chestObject.bitcoin;
+      chest.id = chestObject.id;
+      chest.setPosition(chestObject.x * Scale.FACTOR, chestObject.y * Scale.FACTOR);
       chest.makeActive();
     }
 
   }
-  createWalls() {
-    this.wall = this.physics.add.image(500, 500, 'button1');
-    this.wall.body.setAllowGravity(false);
-    this.wall.setImmovable();
+
+  spawnMonster(monsterObject) {
+    let monster = this.monsters.getFirstDead();
+    if (!monster) {
+      // console.log(monsterObject);
+      monster = new Monster(
+        this, 
+        monsterObject.x * Scale.FACTOR, 
+        monsterObject.y * Scale.FACTOR, 
+        'monsters',
+        monsterObject.frame,
+        monsterObject.id,
+        monsterObject.health,
+        monsterObject.attack,
+        monsterObject.maxHealth
+      );
+      this.monsters.add(monster);
+    } else {
+      monster.id = monsterObject.id;
+      monster.health = monsterObject.health;
+      monster.maxHealth = monsterObject.maxHealth;
+      monster.setTexture('monsters',monsterObject.frame);
+      monster.setPosition(monsterObject.x * Scale.FACTOR, monsterObject.y * Scale.FACTOR);
+      monster.makeActive();
+    }
+
 
   }
   createInput() {
-    this.cursors = this.input.keyboard.createCursorKeys();
+    // this.cursors = this.input.keyboard.createCursorKeys();
+    this.cursors = this.input.keyboard.addKeys({
+      a:  Phaser.Input.Keyboard.KeyCodes.A,
+      s:  Phaser.Input.Keyboard.KeyCodes.S,
+      d:  Phaser.Input.Keyboard.KeyCodes.D,
+      w:  Phaser.Input.Keyboard.KeyCodes.W,
+      up: 'up',
+      down: 'down',
+      left: 'left',
+      right: 'right',
+      space: 'space'
+    });
+
   }
   addCollisions() {
-    this.physics.add.collider(this.player, this.wall);
+    // block the player and everything in the blocked layer
+    this.physics.add.collider(this.player, this.map.blockedLayer);
     this.physics.add.overlap(this.player, this.chests, this.collectChest, null, this);
+    this.physics.add.collider(this.monsters, this.map.blockedLayer);
+    this.physics.add.overlap(this.player.weapon, this.monsters, this.enemyOverlap, null, this);
+  }
+
+  enemyOverlap(player, enemy) {
+    if (this.player.playerAttacking && !this.player.swordHit) {
+      this.player.swordHit = true;
+      // enemy.makeInactive();
+      this.events.emit('monsterAtttacked', enemy.id);
+    }
+
   }
 
   collectChest(player,chest) {
@@ -82,7 +128,44 @@ class GameScene extends Phaser.Scene {
     if (this.goldPickup.isPlaying == false) {
       this.goldPickup.play();
     }
-    this.time.delayedCall(1000, this.spawnChest, [], this);
+    this.events.emit('pickUpChest', chest.id);
+  }
+  createMap() {
+    // create map
+    this.map = new Map(this, 'map', 'background', 'background', 'blocked');
+  }
+  createGameManager() {
+    
+    this.events.on('spawnPlayer', (location) => {
+      this.createPlayer(location);
+      this.addCollisions();
+    });
+    this.events.on('chestSpawned', (chest) => {
+      this.spawnChest(chest);
+    });
+    this.events.on('monsterSpawned', (monster) => {
+      // console.log('spawned:'+monster);
+      this.spawnMonster(monster);
+    });
+    this.events.on('monsterRemoved', (monsterId) => {
+      this.monsters.getChildren().forEach((monster) => {
+        if (monster.id == monsterId) {
+          monster.makeInactive();
+        }
+      });
+    });
+    this.events.on('updateMonsterHealth', (monsterId, health) => {
+      this.monsters.getChildren().forEach((monster) => {
+        if (monster.id == monsterId) {
+          monster.updatetHealth(health);
+        }
+      });
+    });
+
+    this.gameManager = new GameManager(this, this.map.map.objects);
+    this.gameManager.setup();
+
+
   }
 
 }

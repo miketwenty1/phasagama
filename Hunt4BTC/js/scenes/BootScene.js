@@ -10,6 +10,8 @@ class BootScene extends Phaser.Scene {
     this.loadSpriteSheets();
     // you can provide multiple audio clips for this sound depending on whether or not they support the type
     this.loadAudio();
+    // load in Tiled map
+    this.loadTimeMap();
 
   }
 
@@ -17,18 +19,23 @@ class BootScene extends Phaser.Scene {
     this.load.image('button1', 'assets/images/ui/blue_button01.png');
     this.load.image('button2', 'assets/images/ui/blue_button02.png');
     this.load.image('btc', 'assets/images/btc.png');
+    this.load.image('background', 'assets/level/background-extruded.png');
   }
   loadSpriteSheets() {
 
     this.load.spritesheet('items', 'assets/images/items.png',{frameWidth: 32, frameHeight: 32});
     this.load.spritesheet('characters', 'assets/images/characters.png',{frameWidth: 32, frameHeight: 32});
+    this.load.spritesheet('monsters', 'assets/images/monsters.png',{frameWidth: 32, frameHeight: 32});
   }
   loadAudio() {
     this.load.audio('goldAudio', ['assets/audio/Pickup.wav'])
-    this.load.audio('wojakAudio', ['assets/audio/wojak.mp3'])
+  }
+  loadTimeMap() {
+    // load tiled json
+    this.load.tilemapTiledJSON('map','assets/level/large_level.json');
   }
   create() {
     console.log('Loading Game');
-    this.scene.start('Title')
+    this.scene.start('Game');
   }
 }
