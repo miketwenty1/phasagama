@@ -16,7 +16,7 @@ class Monster extends Phaser.Physics.Arcade.Image {
     this.createHealthBar();
     this.setOrigin(0);
 
-    console.log('max health: '+this.maxHealth);
+    // console.log('max health: '+this.maxHealth);
   }
   
   createHealthBar() {
@@ -28,7 +28,7 @@ class Monster extends Phaser.Physics.Arcade.Image {
     this.healthBar.fillStyle(0xffffff, .3);
     this.healthBar.fillRect(this.x, this.y-8, 64*Scale.FACTOR, 5);
     this.healthBar.fillGradientStyle(0xff0000, 0xff00ff, 4);
-    console.log(`health: ${this.health} max health: ${this.maxHealth}`);
+    // console.log(`health: ${this.health} max health: ${this.maxHealth}`);
     this.healthBar.fillRect(this.x, this.y-8, 64*Scale.FACTOR * (this.health/this.maxHealth), 5);
   }
   updatetHealth(health) {

@@ -12,7 +12,7 @@ const Mode = {
 }
 
 class PlayerContainer extends Phaser.GameObjects.Container {
-  constructor (scene, x, y, key, frame) {
+  constructor (scene, x, y, key, frame, health, maxHealth, id) {
     super(scene, x, y);
     this.scene = scene;
     this.velocity = 360;
@@ -20,6 +20,9 @@ class PlayerContainer extends Phaser.GameObjects.Container {
     this.playerAttacking = false;
     this.flipX = true;
     this.swordHit = false;
+    this.health = health;
+    this.maxHealth = maxHealth;
+    this.id = id;
 
     this.setSize(32 * Scale.FACTOR,32 * Scale.FACTOR);
     this.scene.physics.world.enable(this);

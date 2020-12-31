@@ -37,7 +37,7 @@ class Spawner {
     let attack = (monsterNum+1)*2
     let health = (monsterNum+1)*4
     const location = this.pickRandomLocation();
-    console.log('health: '+health);
+    // console.log('health: '+health);
     const monster = new MonsterModel(
       location[0], 
       location[1], 

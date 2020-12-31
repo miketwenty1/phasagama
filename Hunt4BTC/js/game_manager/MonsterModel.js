@@ -9,11 +9,11 @@ class MonsterModel {
     this.health = health;
     this.maxHealth = health;
     this.attack = attack;
-    console.log('health: '+this.health+'  maxhealth: '+this.maxHealth);
+    // console.log('health: '+this.health+'  maxhealth: '+this.maxHealth);
   }
   loseHealth(damage) {
-    console.log('spawnerid: '+this.spawnerId+'health: '+this.health+'  maxhealth: '+this.maxHealth+'frame: '+this.frame);
+    // console.log('spawnerid: '+this.spawnerId+'health: '+this.health+'  maxhealth: '+this.maxHealth+'frame: '+this.frame);
     this.health -= damage;
-    console.log('spawnerid: '+this.spawnerId+'health: '+this.health+'  maxhealth: '+this.maxHealth+'frame: '+this.frame);
+    // console.log('spawnerid: '+this.spawnerId+'health: '+this.health+'  maxhealth: '+this.maxHealth+'frame: '+this.frame);
   }
 }

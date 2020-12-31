@@ -6,6 +6,7 @@ class GameManager {
     this.spawners = {};
     this.chests = {};
     this.monsters = {};
+    this.players = {};
     this.playerLocations = [];
     this.chestLocations = {};
     this.monsterLocations = {};
@@ -63,10 +64,10 @@ class GameManager {
       // update spawner
       if (this.monsters[monsterId]) {
         this.monsters[monsterId].loseHealth(2*Mode.EASY);
-        console.log('health' + this.monsters[monsterId].health);
+        // console.log('health' + this.monsters[monsterId].health);
         // check health remove monster if dead
         if (this.monsters[monsterId].health <= 0) {
-          console.log('health2' + this.monsters[monsterId].health);
+          // console.log('health2' + this.monsters[monsterId].health);
           this.spawners[this.monsters[monsterId].spawnerId].removeObject(monsterId);
           this.scene.events.emit('monsterRemoved', monsterId);
         } else {
@@ -115,8 +116,9 @@ class GameManager {
   }
 
   spawnPlayer() {
-    const location = this.playerLocations[Math.floor(Math.random() * this.playerLocations.length)];
-    this.scene.events.emit('spawnPlayer', location);
+    const player = new PlayerModel(this.playerLocations);
+    this.players[player.id] = player;
+    this.scene.events.emit('spawnPlayer', player);
   }
   addChest(chestId, chest) {
     this.chests[chestId] = chest;

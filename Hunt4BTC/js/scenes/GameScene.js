@@ -27,8 +27,17 @@ class GameScene extends Phaser.Scene {
       volume: .6 // value between 0 and 1
     });
   }
-  createPlayer(location) {
-    this.player = new PlayerContainer(this, location[0]*Scale.FACTOR, location[1]*Scale.FACTOR, 'characters', 5);
+  createPlayer(playerObject) {
+    this.player = new PlayerContainer(
+      this, 
+      playerObject.x*Scale.FACTOR, 
+      playerObject.y*Scale.FACTOR, 
+      'characters', 
+      5,
+      playerObject.health,
+      playerObject.maxHealth,
+      playerObject.id
+      );
   }
   createGroups() {
 
@@ -136,8 +145,8 @@ class GameScene extends Phaser.Scene {
   }
   createGameManager() {
     
-    this.events.on('spawnPlayer', (location) => {
-      this.createPlayer(location);
+    this.events.on('spawnPlayer', (playerObject) => {
+      this.createPlayer(playerObject);
       this.addCollisions();
     });
     this.events.on('chestSpawned', (chest) => {
