@@ -17,5 +17,5 @@ const Mode = {
   HARD: 5,
   INSANE: 1
 }
-const DIFFICULTY = 'EASY';
+const DIFFICULTY = 'MEDIUM';
 const AUDIO_LEVEL = .5;
