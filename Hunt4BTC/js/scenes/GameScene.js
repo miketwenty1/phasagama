@@ -21,9 +21,25 @@ class GameScene extends Phaser.Scene {
   }
 
   createAudio() {
-    this.goldPickup = this.sound.add('goldAudio', {
+    this.goldAudio = this.sound.add('goldAudio', {
       loop: false,
-      volume: .6 // value between 0 and 1
+      volume: AUDIO_LEVEL*.6 // value between 0 and 1ß
+    });
+    this.enemyDeathAudio = this.sound.add('enemyDeathAudio', {
+      loop: false,
+      volume: AUDIO_LEVEL // value between 0 and 1
+    });
+    this.playerAttackAudio = this.sound.add('playerAttackAudio', {
+      loop: false,
+      volume: AUDIO_LEVEL*.05 // value between 0 and 1
+    });
+    this.playerDamageAudio = this.sound.add('playerDamageAudio', {
+      loop: false,
+      volume: AUDIO_LEVEL // value between 0 and 1
+    });
+    this.playerDeathAudio = this.sound.add('playerDeathAudio', {
+      loop: false,
+      volume: AUDIO_LEVEL // value between 0 and 1
     });
   }
   createPlayer(playerObject) {
@@ -35,7 +51,8 @@ class GameScene extends Phaser.Scene {
       5,
       playerObject.health,
       playerObject.maxHealth,
-      playerObject.id
+      playerObject.id,
+      this.playerAttackAudio
       );
   }
   createGroups() {
@@ -133,8 +150,8 @@ class GameScene extends Phaser.Scene {
     // chest.makeInactive();  this now done by chest event listener on chestRemoved
     // this.score += chest.coins commenting this out because now it exist in the player model 
     // this.events.emit('updateBalance', this.score);  this also taken out and put game manager
-    if (this.goldPickup.isPlaying == false) {
-      this.goldPickup.play();
+    if (this.goldAudio.isPlaying == false) {
+      this.goldAudio.play();
     }
     this.events.emit('pickUpChest', chest.id, this.player.id);
   }
@@ -159,6 +176,7 @@ class GameScene extends Phaser.Scene {
       this.monsters.getChildren().forEach((monster) => {
         if (monster.id == monsterId) {
           monster.makeInactive();
+          this.enemyDeathAudio.play();
         }
       });
     });
@@ -176,10 +194,18 @@ class GameScene extends Phaser.Scene {
         }
       });
     });
-    this.events.on('updatePlayerHealth', (playerId, health) => {
-      console.log('whats going on here');
-      console.log(Object.keys(this.player));
-      this.player.updateHealth(health);
+    this.events.on('updatePlayerHealth', (playerId, damage) => {
+      // console.log('whats going on here');
+      // console.log(Object.keys(this.player));
+      this.player.updateHealth(damage);
+      if (damage > 0) {
+        this.playerDamageAudio.play();
+      }
+    });
+    this.events.on('respawnPlayer', (playerObject) => {
+      this.player.respawn(playerObject);
+      console.log('player death audio');
+      this.playerDeathAudio.play();
     });
 
     this.gameManager = new GameManager(this, this.map.map.objects);

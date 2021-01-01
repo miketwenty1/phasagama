@@ -10,7 +10,7 @@ class UiScene extends Phaser.Scene {
     this.setupEvents();
   }
   setupUiElements() {
-    this.scoreText = this.add.text(35, 8, 'Bitcoins: 0', {
+    this.scoreText = this.add.text(35, 8, ': 0', {
       fontSize: '16px',
       fill: '#ffffff'
     });
@@ -19,7 +19,7 @@ class UiScene extends Phaser.Scene {
   setupEvents() {
     // listen for updateScore event from game scene
     this.gameScene.events.on('updateBalance', (score) => {
-      this.scoreText.setText(`Bitcoins: ${score}`);
+      this.scoreText.setText(`: ${score}`);
     });
   }
 }
