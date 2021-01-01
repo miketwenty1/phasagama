@@ -70,7 +70,7 @@ class GameManager {
     this.scene.events.on('monsterAtttacked', (monsterId, playerId) => {
       // update spawner
       // console.log('debug: '+ Object.keys(this.players[playerId]));
-      console.log('playerid: '+playerId);
+      // console.log('playerid: '+playerId);
       if (this.monsters[monsterId]) {
         const { bitcoin, attack } = this.monsters[monsterId];
         this.monsters[monsterId].loseHealth(2*Mode[DIFFICULTY]);
@@ -84,12 +84,28 @@ class GameManager {
           // console.log('health2' + this.monsters[monsterId].health);
           this.spawners[this.monsters[monsterId].spawnerId].removeObject(monsterId);
           this.scene.events.emit('monsterRemoved', monsterId);
+          // give player some more health if they kill a monster
+          this.players[playerId].updateHealth(-10);
+          this.scene.events.emit('updatePlayerHealth', playerId, this.players[playerId].health);
         } else {
           this.players[playerId].updateHealth(attack);
           //update player health
           this.scene.events.emit('updatePlayerHealth', playerId, this.players[playerId].health);
           //update monster health
           this.scene.events.emit('updateMonsterHealth', monsterId, this.monsters[monsterId].health);
+
+          // respawn player if he be ded 
+          if (this.players[playerId].health <= 0) {
+            // update balance to take a 50% penalty
+            // 10 represents the "radix" i believe this should be 10 for base 10 numbering
+            let reduceAmount = parseInt(-this.players[playerId].bitcoin/2);
+            // console.log(reduceAmount);
+            this.players[playerId].updateBitcoin(reduceAmount);
+            this.scene.events.emit('updateBalance', this.players[playerId].bitcoin);
+            //respawn
+            this.players[playerId].respawn();
+            this.scene.events.emit('respawnPlayer', this.players[playerId]);
+          }
         }
       }
 

@@ -12,9 +12,10 @@ const Scale = {
 };
 
 const Mode = {
-  EASY: 10,
-  MEDIUM: 5,
-  HARD: 3,
+  EASY: 20,
+  MEDIUM: 10,
+  HARD: 5,
   INSANE: 1
 }
-const DIFFICULTY = 'MEDIUM';
+const DIFFICULTY = 'EASY';
+const AUDIO_LEVEL = .5;
