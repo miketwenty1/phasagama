@@ -59,6 +59,8 @@ class GameScene extends Phaser.Scene {
 
     this.chests = this.physics.add.group();
     this.monsters = this.physics.add.group();
+    // this will auto run if this group has an update method
+    this.monsters.runChildUpdate = true;
 
   }
   spawnChest(chestObject) {
@@ -92,8 +94,8 @@ class GameScene extends Phaser.Scene {
       // console.log(monsterObject);
       monster = new Monster(
         this, 
-        monsterObject.x * Scale.FACTOR, 
-        monsterObject.y * Scale.FACTOR, 
+        monsterObject.x, 
+        monsterObject.y, 
         'monsters',
         monsterObject.frame,
         monsterObject.id,
@@ -107,7 +109,7 @@ class GameScene extends Phaser.Scene {
       monster.health = monsterObject.health;
       monster.maxHealth = monsterObject.maxHealth;
       monster.setTexture('monsters',monsterObject.frame);
-      monster.setPosition(monsterObject.x * Scale.FACTOR, monsterObject.y * Scale.FACTOR);
+      monster.setPosition(monsterObject.x, monsterObject.y);
       monster.makeActive();
     }
 
@@ -194,6 +196,19 @@ class GameScene extends Phaser.Scene {
         }
       });
     });
+    this.events.on('monsterMovement', (monsters) => {
+      this.monsters.getChildren().forEach((monster) => {
+        Object.keys(monsters).forEach((monsterId) => {
+          if (monster.id === monsterId) {
+            // better than setPosition() because it will use physics and is smoother
+            // the 1st argument is for what is moving 
+            // 2nd argument must contain an x.y coordinate
+            // 3rd arg is velocity
+            this.physics.moveToObject(monster, monsters[monsterId], 40);
+          }
+        });
+      });
+    });
     this.events.on('updatePlayerHealth', (playerId, damage) => {
       // console.log('whats going on here');
       // console.log(Object.keys(this.player));
@@ -207,6 +222,7 @@ class GameScene extends Phaser.Scene {
       console.log('player death audio');
       this.playerDeathAudio.play();
     });
+    
 
     this.gameManager = new GameManager(this, this.map.map.objects);
     this.gameManager.setup();

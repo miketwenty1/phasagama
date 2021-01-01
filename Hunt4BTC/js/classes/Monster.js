@@ -51,4 +51,7 @@ class Monster extends Phaser.Physics.Arcade.Image {
     this.body.checkCollision.none = false;
     this.updateHealthBar();
   }
+  update() {
+    this.updateHealthBar();
+  }
 }
